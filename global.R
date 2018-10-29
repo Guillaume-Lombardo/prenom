@@ -68,7 +68,7 @@ selecteur <- function(dt = donnees_insee, sexe = 'F', annee = NULL, deparatement
 							dptot = dts_departement))
 }
 
-histoire_prenom <- function(dt = donnees_insee, prenom = 'ELENA') {
+histoire_prenom <- function(dt = donnees_insee, prenom = 'GINETTE') {
 	return(dt[preusuel %in% prenom & annais != 'XXXX' & dpt != 'XX'])
 }
 
