@@ -41,10 +41,12 @@ shinyServer(function(input, output) {
 																														prenom = prenom2()), 
 																			 sexe = 'F', 
 																			 departement = departement2())})
-	graph_dpartR <- reactive({graph_departement(dt = histoire_prenom(dt = donnees_insee, 
-																																	prenom = prenom2()), 
-																						 sexe = 'F',
-																						 annee = annee2())})
+	graph_dpartR <- eventReactive(input$dpt_button2,
+															 {graph_departement(dt = histoire_prenom(dt = donnees_insee, 
+															 																				prenom = prenom2()), 
+															 									 sexe = 'F',
+															 									 annee = annee2())},
+															 ignoreNULL = FALSE, ignoreInit = FALSE)
 	
 	output$table_prenom <- renderDataTable({
 		switch (input$finesse,

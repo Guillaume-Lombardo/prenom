@@ -29,7 +29,8 @@ navbarPage("Prénoms",
 					 				 			 							value = c(1900,2017),
 					 				 			 							step = 1),
 					 				 			 	textInput('departement2', 'Departement : ', 
-					 				 			 						placeholder = '75, 77, 78, ...')
+					 				 			 						placeholder = '75, 77, 78, ...'),
+					 				 			 	actionButton('dpt_button2', 'Actualiser la carte')
 					 				 			 	# ,
 					 				 			 	# checkboxInput('limitefille', 'Se limiter aux filles ?', value = TRUE)
 					 				 			 )

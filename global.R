@@ -10,7 +10,7 @@ library(stringr)
 library(purrr)
 
 donnees_insee <- rio::import('./data/dpt2017.txt', encoding = 'UTF-8', setclass = 'data.table') 
-map_dep <- rgdal::readOGR("./data/departements-20140306-50m-shp/departements-20140306-50m.shp")
+map_dep <- rgdal::readOGR("./data/departements-20140306-100m-shp/departements-20140306-100m.shp")
 map_dep <- fortify (map_dep, region="code_insee")
 
 annee2int <- function(x) {
