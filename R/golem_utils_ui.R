@@ -2,10 +2,10 @@
 #'
 #' @param list An R list
 #' @param class a class for the list
-#' 
+#'
 #' @return an HTML list
 #' @noRd
-#' 
+#'
 #' @examples
 #' list_to_li(c("a","b"))
 #'
@@ -14,27 +14,27 @@ list_to_li <- function(list, class = NULL){
   if (is.null(class)){
     tagList(
       lapply(
-        list, 
+        list,
         tags$li
       )
     )
   } else {
     res <- lapply(
-      list, 
+      list,
       tags$li
     )
     res <- lapply(
-      res, 
+      res,
       function(x) {
         tagAppendAttributes(
-          x, 
+          x,
           class = class
         )
       }
     )
     tagList(res)
   }
-  
+
 }
 
 #' @importFrom htmltools tags tagAppendAttributes tagList
@@ -42,27 +42,27 @@ list_to_p <- function(list, class = NULL){
   if (is.null(class)){
     tagList(
       lapply(
-        list, 
+        list,
         tags$p
       )
     )
   } else {
     res <- lapply(
-      list, 
+      list,
       tags$p
     )
     res <- lapply(
-      res, 
-      function(x) { 
+      res,
+      function(x) {
         tagAppendAttributes(
-          x, 
+          x,
           class = class
         )
       }
     )
     tagList(res)
   }
-  
+
 }
 
 #' @importFrom htmltools tags tagAppendAttributes tagList
@@ -76,8 +76,8 @@ named_to_li <- function(list, class = NULL){
           )
         )
       },
-      list, 
-      names(list), 
+      list,
+      names(list),
       SIMPLIFY = FALSE
     )
     tagList(res)
@@ -91,14 +91,14 @@ named_to_li <- function(list, class = NULL){
         )
       },
       list,
-      names(list), 
+      names(list),
       SIMPLIFY = FALSE
     )
     res <- lapply(
-      res, 
+      res,
       function(x) {
         tagAppendAttributes(
-          x, 
+          x,
           class = class
         )
       }
@@ -114,7 +114,7 @@ named_to_li <- function(list, class = NULL){
 #'
 #' @return a new tag
 #' @noRd
-#' 
+#'
 #' @examples
 #' a <- shiny::tags$p(src = "plop", "pouet")
 #' tagRemoveAttributes(a, "src")
@@ -127,28 +127,28 @@ tagRemoveAttributes <- function(tag, ...) {
 }
 
 #' Hide or display a tag
-#' 
+#'
 #' @param tag the tag
-#' 
+#'
 #' @return a tag
 #' @noRd
-#' 
+#'
 #' @examples
 #' ## Hide
 #' a <- shiny::tags$p(src = "plop", "pouet")
 #' undisplay(a)
 #' b <- shiny::actionButton("go_filter", "go")
 #' undisplay(b)
-#' 
+#'
 #' @importFrom htmltools tagList
 undisplay <- function(tag) {
   # if not already hidden
   if (
-    !is.null(tag$attribs$style) && 
+    !is.null(tag$attribs$style) &&
     !grepl("display:\\s+none", tag$attribs$style)
   ) {
     tag$attribs$style <- paste(
-      "display: none;", 
+      "display: none;",
       tag$attribs$style
     )
   } else {
@@ -160,12 +160,12 @@ undisplay <- function(tag) {
 #' @importFrom htmltools tagList
 display <- function(tag) {
   if (
-    !is.null(tag$attribs$style) && 
+    !is.null(tag$attribs$style) &&
     grepl("display:\\s+none", tag$attribs$style)
   ) {
     tag$attribs$style <- gsub(
-      "(\\s)*display:(\\s)*none(\\s)*(;)*(\\s)*", 
-      "", 
+      "(\\s)*display:(\\s)*none(\\s)*(;)*(\\s)*",
+      "",
       tag$attribs$style
     )
   }
@@ -173,11 +173,11 @@ display <- function(tag) {
 }
 
 #' Hide an elements by calling jquery hide on it
-#' 
+#'
 #' @param id the id of the element to hide
-#' 
+#'
 #' @noRd
-#' 
+#'
 #' @importFrom htmltools tags
 jq_hide <- function(id) {
   tags$script(sprintf("$('#%s').hide()", id))
@@ -192,10 +192,10 @@ jq_hide <- function(id) {
 #'
 #' @return an html element
 #' @noRd
-#' 
+#'
 #' @examples
 #' with_red_star("Enter your name here")
-#' 
+#'
 #' @importFrom htmltools tags HTML
 with_red_star <- function(text) {
   htmltools::tags$span(
@@ -210,18 +210,16 @@ with_red_star <- function(text) {
   )
 }
 
-
-
 #' Repeat tags$br
 #'
 #' @param times the number of br to return
 #'
 #' @return the number of br specified in times
 #' @noRd
-#' 
+#'
 #' @examples
 #' rep_br(5)
-#' 
+#'
 #' @importFrom htmltools HTML
 rep_br <- function(times = 1) {
   HTML(rep("<br/>", times = times))
@@ -237,19 +235,19 @@ rep_br <- function(times = 1) {
 #'
 #' @examples
 #' enurl("https://www.thinkr.fr", "ThinkR")
-#' 
+#'
 #' @importFrom htmltools tags
 enurl <- function(url, text){
   tags$a(href = url, text)
 }
 
 #' Columns wrappers
-#' 
-#' These are convenient wrappers around 
+#'
+#' These are convenient wrappers around
 #' `column(12, ...)`, `column(6, ...)`, `column(4, ...)`...
-#' 
+#'
 #' @noRd
-#' 
+#'
 #' @importFrom shiny column
 col_12 <- function(...){
   column(12, ...)
@@ -294,39 +292,104 @@ col_1 <- function(...){
   column(1, ...)
 }
 
-# UNCOMMENT AND USE 
-# 
+# UNCOMMENT AND USE
+#
 # usethis::use_package("markdown")
 # usethis::use_package("rmarkdown")
-#   
+#
 # To use this part of the UI
-#   
+#
 #' #' Include Content From a File
-#' #' 
+#' #'
 #' #' Load rendered RMarkdown from a file and turn into HTML.
-#' #' 
+#' #'
 #' #' @rdname includeRMarkdown
 #' #' @export
-#' #' 
+#' #'
 #' #' @importFrom rmarkdown render
 #' #' @importFrom markdown markdownToHTML
 #' #' @importFrom htmltools HTML
 #' includeRMarkdown <- function(path){
-#'   
+#'
 #'   md <- tempfile(fileext = '.md')
-#'   
+#'
 #'   on.exit(unlink(md),add = TRUE)
-#'   
+#'
 #'   rmarkdown::render(
 #'     path,
 #'     output_format = 'md_document',
 #'     output_dir = tempdir(),
 #'     output_file = md,quiet = TRUE
 #'     )
-#'   
+#'
 #'   html <- markdown::markdownToHTML(md, fragment.only = TRUE)
-#'   
+#'
 #'   Encoding(html) <- "UTF-8"
-#'   
+#'
 #'   return(HTML(html))
 #' }
+#'
+#' #' Navigation bar (top, expand)
+#'
+#' @param name character. Title.
+#' @param x    named character vector. List of navigation choice.
+#' @importFrom htmltools tags
+nav_ <- function(name, x){
+  tags$nav(
+    class = "navbar navbar-expand-lg fixed-top ",
+    tags$p(
+      name
+    ),
+    # For portait mode
+    tags$button(
+      class = "navbar-toggler",
+      type = "button",
+      `data-toggle` = "collapse",
+      `data-target` = "#menu",
+      `aria-controls` = "menu",
+      `aria-expanded` = "false" ,
+      `aria-label` = "Toggle navigation",
+      tags$div(
+        class = "navbar-toggler-icon",
+        HTML('<img src="www/menu.png">')
+      )
+    ),
+    tags$div(
+      class = "collapse navbar-collapse",
+      id = "menu",
+      tags$ul(
+        class = "navbar-nav mr-4",
+        tagList(
+          purrr::imap(
+            x, nav_item
+          )
+        )
+      )
+    )
+  ) %>% tags$div(class = "plpl")
+}
+
+#' Navigation bar item (top)
+#' @param label character. Link destination.
+#' @param id    character. Label.
+#' @importFrom htmltools tags
+#' @importFrom glue glue
+nav_item <- function(label, id){
+  tags$li(
+    class = "nav-item",
+    tags$a(
+      class = "nav-link",
+      `data-value` = label,
+      onclick = glue(
+        '$( "a.nav-link" ).removeClass("active");
+         $( this ).addClass("active");
+         $( ".row" ).hide();
+         $( "#{id}" ).show();
+         $( "#{id}" ).trigger("show");
+         $( "#{id}" ).trigger("shown")'
+      ),
+      label
+    )
+  )
+}
+
