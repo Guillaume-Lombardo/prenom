@@ -1,7 +1,11 @@
 Package: prenom
+Title: prenom
+Description: Un package chiny d'exploration du fichier insee des prenoms.
 Version: 0.0.0.9000
 Authors@R: person('Lombardo', 'Guillaume', email = 'lombardo.guillaume@gmail.com', role = c('cre', 'aut'))
 License: MIT + file LICENSE
+Depends: 
+    R (>= 2.10)
 Imports: 
     config,
     golem,
@@ -13,19 +17,26 @@ Imports:
     htmltools,
     data.table,
     dplyr,
+    forcats,
+    fs,
     ggplot2,
     plotly,
+    magrittr,
     purrr,
-    stringr,
+    scales,
     sf,
-    magrittr
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 6.1.1
-URL: https://github.com/Guillaume-Lombardo/prenom
-BugReports: https://github.com/Guillaume-Lombardo/prenom/issues
+    stringi,
+    stringr,
+    tidyr,
+    patchwork
 Suggests: 
     testthat,
-    cli
-Depends: 
-    R (>= 2.10)
+    cli,
+    knitr,
+    rmarkdown
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.0
+URL: https://github.com/Guillaume-Lombardo/prenom
+BugReports: https://github.com/Guillaume-Lombardo/prenom/issues
+VignetteBuilder: knitr

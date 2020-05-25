@@ -11,23 +11,26 @@ mod_prenom_tableau_ui <- function(id){
   ns <- NS(id)
   tagList(
     col_2(
-      wellPanel(style = "overflow-y:scroll; max-height: 800px",
+      wellPanel(style = "max-height: 800px",
                 radioButtons(ns('finesse'), 'Finesse du tableau',
-                             choices = setNames(c('fin','annee', 'depart', 'rien'),
-                                                c('detail maximaux', 'par année',
-                                                  'par départements', 'tout en même temps')),
+                             choices = purrr::set_names(c('fin','annee', 'depart', 'rien'),
+                                                        c('detail maximaux', 'par ann\u00E9e',
+                                                          'par d\u00E9partements', 'tout en m\u00EAme temps')),
                              selected = 'rien'),
-                sliderInput(ns('annee'), "Année",
-                            min = 1900, max = 2017,
-                            value = c(1900,2017),
+                radioButtons(ns('genre'), 'Genre du pr\u00E9nom',
+                             choices = purrr::set_names(1:3, c('Gar\u00E7ons', 'Filles', 'Les deux')),
+                             selected = '2'),
+                sliderInput(ns('annee'), "Ann\u00E9e",
+                            min = 1900, max = annee_max,
+                            value = c(1900, annee_max),
                             step = 1),
-                textInput(ns('departement'), 'Departement : ',
+                textInput(ns('departement'), 'D\u00E9partement(s) : ',
                           placeholder = '75, 77, 78, ...',
                           value = NULL)
       )
     ),
     col_10(
-      dataTableOutput(ns('table_prenom'))
+      DT::dataTableOutput(ns('table_prenom'))
     )
   )
 }
@@ -35,8 +38,20 @@ mod_prenom_tableau_ui <- function(id){
 #' prenom_tableau Server Function
 #'
 #' @noRd
-mod_prenom_tableau_server <- function(input, output, session){
+mod_prenom_tableau_server <- function(input, output, session, r){
   ns <- session$ns
+
+  observeEvent( input$finesse, {
+    r$tableau$finesse <- input$finesse
+    r$tableau$variables <- switch(input$finesse, 'fin' = c('annee', 'dpt'), 'annee' = 'annee', 'depart' = 'dpt', 'rien' = character(0))
+    } )
+  observeEvent( input$annee, {r$tableau$annee <- input$annee[1]:input$annee[2]} )
+  observeEvent( input$departement, {r$tableau$departement <- parseur(input$departement) %|||% fc(c(1:95, 971:974))} )
+  observeEvent( input$genre, {r$tableau$genre <- switch(as.integer(input$genre %||% 2), 'M', 'F', c('M', 'F'))})
+
+  output$table_prenom <- DT::renderDataTable({
+    table_mef(dt = r$prenom_insee, sexe = r$tableau$genre, annee = r$tableau$annee, departement = r$tableau$departement, variables = r$tableau$variables)
+  }, rownames= FALSE)
 
 }
 

@@ -23,6 +23,12 @@ usethis::use_package( "plotly" )
 usethis::use_package( "purrr" )
 usethis::use_package( "stringr" )
 usethis::use_package( "sf" )
+usethis::use_package( "forcats" )
+usethis::use_package( "fs" )
+usethis::use_package( "scales" )
+usethis::use_package( "stringi" )
+usethis::use_package( "tidyr" )
+usethis::use_package( "patchwork" )
 
 # usethis::use_package( "thinkr" )
 
