@@ -17,7 +17,15 @@ mod_prenom_tableau_ui <- function(id){
                                                         c('detail maximaux', 'par ann\u00E9e',
                                                           'par d\u00E9partements', 'tout en m\u00EAme temps')),
                              selected = 'rien'),
-                uiOutput(ns('common_choice'))
+                radioButtons(ns('genre'), 'Genre du pr\u00E9nom',
+                             choices = purrr::set_names(1:3, c('Gar\u00E7ons', 'Filles', 'Les deux')),
+                             selected = '2'),
+                sliderInput(ns('annee'), "Ann\u00E9e",
+                            min = 1900, max = annee_max,
+                            value = c(1900, annee_max),
+                            step = 1),
+                textInput(ns('departement'), 'D\u00E9partement : ',
+                          placeholder = '75, 77, 78, ...')
       )
     ),
     col_10(
@@ -37,36 +45,18 @@ mod_prenom_tableau_server <- function(input, output, session, r){
     r$tableau$variables <- switch(input$finesse, 'fin' = c('annee', 'dpt'), 'annee' = 'annee', 'depart' = 'dpt', 'rien' = character(0))
     } )
   observeEvent( input$annee, {
-    r$tableau$annee <- input$annee[1]:input$annee[2]
-    r$graphique$annee <- input$annee[1]:input$annee[2]
+      r$annee <- input$annee[1]:input$annee[2]
   } )
   observeEvent( input$departement, {
-    r$tableau$departement <- parseur(input$departement) %||% fc(c(1:95, 971:974))
-    r$graphique$departement <- parseur(input$departement) %||% fc(c(1:95, 971:974))
+      r$departement <- parseur(input$departement) %||% fc(c(1:95, 971:974))
   } )
   observeEvent( input$genre, {
-    r$tableau$genre <- switch(as.integer(input$genre), 'M', 'F', c('M', 'F'))
-    r$graphique$genre <- switch(as.integer(input$genre), 'M', 'F', c('M', 'F'))
+    r$genre <- switch(as.integer(input$genre), 'M', 'F', c('M', 'F'))
   } )
 
-  output$common_choice <- renderUI({
-    tagList(
-      radioButtons(ns('genre'), 'Genre du pr\u00E9nom',
-                   choices = purrr::set_names(1:3, c('Gar\u00E7ons', 'Filles', 'Les deux')),
-                   selected = switch(paste0(r$tableau$genre, collapse = ''), 'M' = 1, 'F' = 2, 'MF' = 3)),
-      sliderInput(ns('annee'), "Ann\u00E9e",
-                  min = 1900, max = annee_max,
-                  value = c(min(r$tableau$annee), max(r$tableau$annee)),
-                  step = 1),
-      textInput(ns('departement'), 'D\u00E9partement : ',
-                placeholder = '75, 77, 78, ...',
-                value = paste0(r$tableau$departement, collapse = ', '))
-    )
-  })
-
   output$table_prenom <- DT::renderDataTable({
-    table_mef(dt = r$prenom_insee, sexe = r$tableau$genre, annee = r$tableau$annee, departement = r$tableau$departement, variables = r$tableau$variables)
-  }, rownames= FALSE)
+    table_mef(dt = r$prenom_insee, sexe = r$genre, annee = r$annee, departement = r$departement, variables = r$tableau$variables)
+  }, rownames = FALSE)
 
 }
 

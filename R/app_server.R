@@ -7,19 +7,19 @@
 app_server <- function( input, output, session ) {
 
   r <- rv(
+    activation_rate = 1,
     prenom_insee = prenom_insee,
+    annee = c(1900, annee_max),
+    genre = 'F',
+    departement = NULL,
+
     tableau = rv(
       finesse = 'rien',
-      annee = c(1900, annee_max),
-      genre = 'F',
-      departement = NULL,
       variable = character(0)
     ),
+
     graphique = rv(
-      prenom = 'GINETTE',
-      annee = c(1900, annee_max),
-      departement = NULL,
-      genre = 'F'
+      prenom = 'GINETTE'
     )
   )
 

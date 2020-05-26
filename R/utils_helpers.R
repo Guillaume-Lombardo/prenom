@@ -73,7 +73,7 @@ table_mef <- function(dt = prenom_insee, sexe = 'F', annee = NULL, departement =
 }
 
 #' @name helper_functions
-graph_annee <- function(dt = prenom_insee, candidat = 'GINETTE', sexe = 'F', departement = NULL) {
+graph_annee <- function(dt = prenom_insee, relatif = TRUE, candidat = 'GINETTE', sexe = 'F', departement = NULL) {
 
   dtp <- dt %>%
     dplyr::filter(genre %in% sexe,
@@ -83,7 +83,15 @@ graph_annee <- function(dt = prenom_insee, candidat = 'GINETTE', sexe = 'F', dep
     dplyr::summarise(nombre = sum(nombre,na.rm = TRUE)) %>%
     dplyr::ungroup()
 
-  if (nrow(dtp) == 0) return(ggplot2::ggplot())
+  if (nrow(dtp) == 0) return(ggplot2::ggplot() + ggplot2::theme_void() + ggplot2::labs(title = 'aucune occurence de ce pr\u00E9nom...'))
+
+  label_function <- function(relatif) {
+    if (relatif) {
+      return(scales::percent_format(accuracy = .1))
+    } else {
+      return(scales::number_format(accuracy = 1, big.mark = ' '))
+    }
+  }
 
   titre <- paste0(paste0(stringr::str_to_sentence(unique(candidat)), collapse = ', '), ' : ', paste0(c('F' = 'Fille', 'M' = 'Gar\u00e7ons')[sexe], collapse = ' et '))
 
@@ -91,13 +99,13 @@ graph_annee <- function(dt = prenom_insee, candidat = 'GINETTE', sexe = 'F', dep
 
   dplyr::left_join(x = dtp, y = prop, by = c('annee')) %>%
     dplyr::transmute(annee, nb_naissance = nombre,  ratio = (1.0 * nombre) / total ) %>%
-    tidyr::pivot_longer(-annee, names_to = 'type', values_to = 'value') %>%
-    dplyr::mutate(type = forcats::fct_recode(type, 'En nombre de naissances' = 'nb_naissance', 'En part des naissances de l\'ann\u00E9e' = 'ratio')) %>%
+    tidyr::pivot_longer(-annee, names_to = 'type', values_to = 'value', ) %>%
+    dplyr::filter(type == ifelse(relatif, 'ratio', 'nb_naissance')) %>%
+    dplyr::mutate(type = ifelse(type == 'nb_naissance', 'En nombre de naissances', 'En part des naissances de l\'ann\u00E9e')) %>%
     ggplot2::ggplot(data = .) +
     ggplot2::aes(x = annee, y = value) +
     ggplot2::geom_bar(stat = 'identity', fill = 'Firebrick') +
-    ggplot2::scale_y_continuous(labels = function(.x) ifelse(0 < .x & .x < 1, scales::percent_format(accuracy = .1)(.x), scales::number_format(accuracy = 1, big.mark = ' ')(.x))) +
-    ggplot2::facet_wrap(~type, nrow = 1, scales = 'free_y') +
+    ggplot2::scale_y_continuous(labels = label_function(relatif)) +
     ggplot2::labs(title = titre,
                   x = 'ann\u00e9e',
                   y = '')
@@ -117,7 +125,7 @@ graph_departement <- function(dt = prenom_insee, relatif = TRUE, candidat = 'GIN
     dplyr::summarise(nombre = sum(nombre,na.rm = TRUE)) %>%
     dplyr::ungroup()
 
-  if (nrow(dtp) == 0) return(ggplot2::ggplot())
+  if (nrow(dtp) == 0) return(ggplot2::ggplot() + ggplot2::theme_void())
 
   prop <- proportionneur(sexe = sexe, annee = annee, departement = dpt)[['dpt']]
 
