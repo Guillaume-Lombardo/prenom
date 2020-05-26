@@ -2,6 +2,7 @@
 
 * updated the project to be a working golem package.
 * the shiny app is now modularised.
+* add packagedown site
 
 # prenom 0.0.0.9000
 
