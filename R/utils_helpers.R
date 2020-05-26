@@ -83,6 +83,8 @@ graph_annee <- function(dt = prenom_insee, candidat = 'GINETTE', sexe = 'F', dep
     dplyr::summarise(nombre = sum(nombre,na.rm = TRUE)) %>%
     dplyr::ungroup()
 
+  if (nrow(dtp) == 0) return(ggplot2::ggplot())
+
   titre <- paste0(paste0(stringr::str_to_sentence(unique(candidat)), collapse = ', '), ' : ', paste0(c('F' = 'Fille', 'M' = 'Gar\u00e7ons')[sexe], collapse = ' et '))
 
   prop <- proportionneur(prenom_insee, sexe, departement = departement)[['annee']]
@@ -115,6 +117,8 @@ graph_departement <- function(dt = prenom_insee, relatif = TRUE, candidat = 'GIN
     dplyr::summarise(nombre = sum(nombre,na.rm = TRUE)) %>%
     dplyr::ungroup()
 
+  if (nrow(dtp) == 0) return(ggplot2::ggplot())
+
   prop <- proportionneur(sexe = sexe, annee = annee, departement = dpt)[['dpt']]
 
   titre <- paste0(paste0(stringr::str_to_sentence(unique(candidat)), collapse = ', '), ' : ', paste0(c('F' = 'Fille', 'M' = 'Gar\u00e7ons')[sexe], collapse = ' et '))
@@ -130,10 +134,12 @@ graph_departement <- function(dt = prenom_insee, relatif = TRUE, candidat = 'GIN
     ggplot2::geom_sf() +
     ggplot2::scale_fill_gradient(low = "LightYellow", high = "Firebrick", labels = ifelse(relatif, scales::percent_format(), scales::number_format(accuracy = 1, big.mark = ' '))) +
     ggplot2::theme_void() +
-    ggplot2::theme(legend.position = "bottom",
+    ggplot2::theme(legend.position = "right",
                    legend.title = ggplot2::element_blank(),
-                   legend.direction = "horizontal",
-                   legend.key.width = ggplot2::unit(3, 'cm')) +
+                   legend.direction = "vertical"
+                   # ,
+                   # legend.key.width = ggplot2::unit(3, 'cm')
+                   ) +
     ggplot2::labs(title = titre,
                   x = '',
                   y = '')
