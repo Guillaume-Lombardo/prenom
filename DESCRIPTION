@@ -1,7 +1,7 @@
 Package: prenom
 Title: prenom
 Description: Un package chiny d'exploration du fichier insee des prenoms.
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: person('Lombardo', 'Guillaume', email = 'lombardo.guillaume@gmail.com', role = c('cre', 'aut'))
 License: MIT + file LICENSE
 Depends: 
